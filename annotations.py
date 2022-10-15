@@ -64,25 +64,29 @@ class Annotations:
         Segment the material by colour.
         """
         colors = [(255, 255, 255), (255, 0, 0), (0, 255, 0), (0, 0, 255),
-                  (255, 255, 0),
-                  (0, 255, 255), (255, 0, 255), (192, 192, 192),
-                  (128, 128, 128),
-                  (128, 0, 0), (128, 128, 0), (0, 128, 0), (128, 0, 128),
-                  (0, 128, 128),
-                  (0, 0, 128)]
+                  (255, 255, 0), (0, 255, 255), (255, 0, 255), (128, 0, 0),
+                  (128, 128, 0), (0, 128, 0), (128, 0, 128), (0, 128, 128),
+                  (0, 0, 128), (250, 128, 114), (255, 165, 0), (0, 100, 0),
+                  (152, 251, 152), (127, 255, 212), (100, 149, 237),
+                  (138, 43, 226), (219, 112, 147), (255, 105, 180),
+                  (245, 222, 179), (139, 69, 19), (230, 230, 250)]
 
         for obj in os.listdir(self.greyfolder):
+            used_colors = []
             if obj != '.DS_Store':
                 obj_folder = self.greyfolder + '/' + obj
                 images = os.listdir(obj_folder)
                 images.sort()
-                rgb_im = np.zeros([1080, 1920, 3], dtype=np.uint8)
+                rgb_im = np.zeros([800, 800, 3], dtype=np.uint8)
                 for im_title in images:
                     im_path = obj_folder + '/' + im_title
                     im = cv2.imread(im_path, 0)
                     bool_matrix = (im > 0)
                     i = random.randint(0, len(colors) - 1)
+                    while colors[i] in used_colors:
+                        i = random.randint(0, len(colors) - 1)
                     rgb_im[bool_matrix] = colors[i]
+                    used_colors.append(colors[i])
                 save_path = self.cdiffolder + '/' + obj + '.png'
                 cv2.imwrite(save_path, rgb_im)
 
@@ -96,7 +100,7 @@ class Annotations:
                 obj_folder = self.greyfolder + '/' + obj
                 images = os.listdir(obj_folder)
                 images.sort()
-                uimg = np.zeros([1080, 1920], dtype=np.uint8)
+                uimg = np.zeros([800, 800], dtype=np.uint8)
                 i = 1
                 for im_title in images:
                     im_path = obj_folder + '/' + im_title
